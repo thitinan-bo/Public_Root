@@ -1,0 +1,30 @@
+﻿<div class="d-flex flex-column p-3 h-100">
+    <h6 class="border-bottom pb-2 mb-3">Menu</h6>
+    <ul class="nav nav-pills flex-column mb-auto">
+        <li class="nav-item">
+            <a href="@Url.Action("Index", "Group")"
+               class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Group" ? "active" : "text-dark")">
+                <i class="fas fa-users me-2"></i>
+                Group Report
+            </a>
+        </li>
+    </ul>
+
+    <h6 class="border-bottom pb-2 mt-4 mb-3">Settings</h6>
+    <ul class="nav nav-pills flex-column">
+        <li>
+            <a href="@Url.Action("Index", "User")"
+               class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "User" ? "active" : "text-dark")">
+                <i class="fas fa-user me-2"></i>
+                User
+            </a>
+        </li>
+        <li>
+            <a href="@Url.Action("Index", "GroupReport")"
+               class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "GroupReport" ? "active" : "text-dark")">
+                <i class="fas fa-chart-bar me-2"></i>
+                Group Report
+            </a>
+        </li>
+    </ul>
+</div>

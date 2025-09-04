@@ -1,98 +1,158 @@
 ﻿using DynamicsReporting.ExternalService.Service.User.Interface;
 using DynamicsReporting.Models;
+using DynamicsReporting.Models.Request;
 using Microsoft.AspNetCore.Mvc;
-using System.Dynamic;
 
-
-namespace DynamicsReporting.API.Controllers.User
+[Route("api/[controller]")]
+[ApiController]
+public class UserController : ControllerBase
 {
+    private readonly IUserService _userService;
+    private readonly DynamicsReporting.ExternalService.Utility.Utility _utility;
+    private readonly ILoggingRepository _logger;
 
-    [ApiController]
-    [Route("api/user/[controller]")]
-
-
-
-    public class UserController : ControllerBase
+    public UserController(IUserService userService, ILoggingRepository loggingRepository, DynamicsReporting.ExternalService.Utility.Utility utility)
     {
-        private readonly IUserService _userService;
+        _userService = userService;
+        _logger = loggingRepository;
+        _utility = utility;
+    }
 
-        public UserController(IUserService userService)
+    // GET: api/user/getAll
+    [HttpGet("getAll")]
+    public async Task<IActionResult> GetAllAsync(int currentPage, int pageSize)
+    {
+        var result = new PaginatedResult<UserModel>();
+        try
         {
-            _userService = userService;
-        }
+            result = await _userService.GetAllAsync(currentPage, pageSize);
 
-        // GET: api/user/getAll 
-        [HttpGet("getAll")]
-        public async Task<IActionResult> GetAllAsync(int currentPage, int pageSize)
-        {
-
-            var result = new PaginatedResult<UserModel>();
-            try
+            if (result.Data.Count == 0)
             {
-                result = await _userService.GetAllAsync(currentPage, pageSize);
-
-                if (result.Data.Count == 0)
-                {
-                    result.StatusCode = 400;
-                    return StatusCode(400, result);
-                }
-
-                result.StatusCode = 200;
-                return StatusCode(200, result);
-            }
-            catch
-            {
-                result.StatusCode = 500;
-                return StatusCode(500, result);
+                result.StatusCode = 404;
+                return NotFound(result);
             }
 
-
-
-
+            result.StatusCode = 200;
+            return Ok(result);
         }
-
-        // GET: api/userName/{userName}
-        [HttpGet("userId/{userName}")]
-        public async Task<IActionResult> GetUserByUserName(string userName)
+        catch (Exception ex)
         {
-            var user = await _userService.GetByUserNameAsync(userName);
-            if (user == null) return NotFound();
-
-            return Ok(user);
+            result.StatusCode = 500;
+            await LogErrorAsync("GetAllAsync", ex);
+            return StatusCode(500, result);
         }
+    }
 
+    // GET: api/user/by-username/{userName}
+    [HttpGet("by-username/{userName}")]
+    public async Task<IActionResult> GetUserByUserName(string userName)
+    {
+        var user = await _userService.GetByUserNameAsync(userName);
+        if (user == null) return NotFound();
 
+        return Ok(user);
+    }
 
-        //////// GET: api/user/{id}/GroupReport
-        //////[HttpGet("groupReport/{userId}")]
-        //////public async Task<IActionResult> GroupReportByUserIdAsync(int userId, int currentPage, int pageSize)
-        //////{
+    // POST: api/user/GroupReportByUserId
+    [HttpPost("GroupReport")]
+    public async Task<IActionResult> GetGroupReportByUserIdAsync([FromBody] ReqUserGroupReport req)
+    {
+        var responseData = new ResponseDataModel<PaginatedResult<GroupReportUseModel>>();
 
-        //////    var result = new PaginatedResult<UserGroupReportModel>();
-        //////    try
-        //////    {
-        //////        result = await _userService.GroupReportByUserIdAsync(userId, currentPage, pageSize);
+        try
+        {
+            var model = await _userService.GetGroupReportByUserIdAsync(req);
 
-        //////        if (result.Data.Count == 0)
-        //////        {
-        //////            result.StatusCode = 400;
-        //////            return StatusCode(400, result);
-        //////        }
+            if (model != null)
+            {
+                responseData.Data = model;
+                responseData.ErrorCode = "0";
+                responseData.ErrorMessage = "Success";
+                responseData.Status = ResponseStatus.Success;
+                responseData.ErrorType = ResponseStatus.Success;
+                responseData.StatusCode = 200;
 
-        //////        result.StatusCode = 200;
-        //////        return StatusCode(200, result);
-        //////    }
-        //////    catch
-        //////    {
-        //////        result.StatusCode = 500;
-        //////        return StatusCode(500, result);
-        //////    }
+                return Ok(responseData);
+            }
 
-        //////}
+            responseData.ErrorCode = "1";
+            responseData.ErrorMessage = "No data found";
+            responseData.Status = ResponseStatus.Failed;
+            responseData.ErrorType = "DataNotFound";
+            responseData.StatusCode = 404;
 
+            return NotFound(responseData);
+        }
+        catch (Exception ex)
+        {
+            string errMessage = $"ErrorCode 500 {ex.Message} Internal server error: {ex.Message}";
+            await LogErrorAsync("GetGroupReportByUserIdAsync", ex);
 
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = errMessage;
+            responseData.Status = ResponseStatus.Error;
+            responseData.ErrorType = ResponseErrorType.Exception;
+            responseData.StatusCode = 500;
 
+            return StatusCode(500, responseData);
+        }
+    }
 
+    // GET: api/user/Report
+    [HttpPost("Report")]
+    public async Task<IActionResult> GetReportByUserIdAsync([FromBody] ReqUserReport userReport)
 
+    {
+        var responseData = new ResponseDataModel<PaginatedResult<UserReportModel>>();
+
+        try
+        {
+            var result = await _userService.GetReportByUserId(userReport);
+            if (result != null)
+            {
+                responseData.Data = result;
+                responseData.ErrorCode = "0";
+                responseData.ErrorMessage = "Success";
+                responseData.Status = ResponseStatus.Success;
+                responseData.ErrorType = ResponseStatus.Success;
+                responseData.StatusCode = 200;
+
+                return Ok(responseData);
+            }
+
+            responseData.ErrorCode = "1";
+            responseData.ErrorMessage = "No data found";
+            responseData.Status = ResponseStatus.Failed;
+            responseData.ErrorType = "DataNotFound";
+            responseData.StatusCode = 404;
+
+            return NotFound(responseData);
+        }
+        catch (Exception ex)
+        {
+            string errMessage = $"ErrorCode 500 {ex.Message} Internal server error: {ex.Message}";
+            await LogErrorAsync("GetReportByUserIdAsync", ex);
+
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = errMessage;
+            responseData.Status = ResponseStatus.Error;
+            responseData.ErrorType = ResponseErrorType.Exception;
+            responseData.StatusCode = 500;
+
+            return StatusCode(500, responseData);
+        }
+    }
+
+    private async Task LogErrorAsync(string functionName, Exception ex)
+    {
+        var addLogModel = new AddLogModel
+        {
+            IPAddress = _utility.GetLocalIPAddress(),
+            HostName = _utility.GetHost(),
+            ErrorMessages = ex.ToString(),
+            FunctionName = functionName
+        };
+        await _logger.AddLogAsync(addLogModel);
     }
 }

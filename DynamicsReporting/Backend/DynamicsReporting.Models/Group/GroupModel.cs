@@ -1,4 +1,5 @@
-﻿public class GroupModel
+﻿namespace DynamicsReporting.Models;
+public class GroupModel
 {
     public int GroupID { get; set; }
     public string GroupName { get; set; } = string.Empty;
@@ -16,6 +17,7 @@ public class GroupReportUseModel
 {
     public int UserGroupReportID { get; set; }
     public int GroupID { get; set; }
-    public int UserID { get; set; }
- 
+    public string GroupName { get; set; } = string.Empty;
+
+
 }

@@ -1,0 +1,97 @@
+﻿@using DynamicsReporting.Models
+@using DynamicsReporting.Models.Authen
+@model ResponseDataModel<PaginatedResult<GroupReportUseModel>>
+
+@{
+    ViewData["Title"] = "Group Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="card shadow-sm">
+    <!-- Content Header -->
+    <div class="card-header">
+        <h5 class="mb-0">Group Report</h5>
+    </div>
+
+    <!-- Table -->
+    <div class="table-responsive">
+        <table class="table table-striped table-hover mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th scope="col">ลำดับ</th>
+                    <th scope="col">Group Report</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model?.Data?.Data != null && Model.Data.Data.Any())
+                {
+                    var index = (Model.Data.Pagination.CurrentPage - 1) * Model.Data.Pagination.PageSize + 1;
+                    foreach (var item in Model.Data.Data)
+                    {
+                        <tr>
+                            <td>@index</td>
+                            <td>@item.GroupName</td>
+                            @* <td class="text-center">
+                                <a asp-controller="Report" asp-action="Index" asp-route-groupId="@item.GroupID"
+                                   class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-link me-1"></i> View Report
+                                </a>
+                            </td> *@
+
+                            <td class="text-center">
+                                @{
+                                    var reportUrl = Url.Action("Index", "Report", new { groupId = item.GroupID });
+                                }
+                                <a href="@reportUrl" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-link me-1"></i> View Report
+                                </a>
+
+                                <!-- Debug: แสดง URL ที่สร้างขึ้น -->
+                              @*   <small class="d-block text-muted">URL: @reportUrl</small> *@
+                            </td>
+
+                        </tr>
+                        index++;
+                    }
+
+
+
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="3" class="text-center text-muted">ไม่พบข้อมูล</td>
+                    </tr>
+                }
+                 
+            </tbody>
+        </table>
+    </div> 
+
+
+    <!-- Pagination -->
+@if (Model?.Data?.Pagination != null && Model.Data.Pagination.TotalPages > 1)
+{
+        <div class="card-footer d-flex justify-content-between align-items-center">
+            <div class="small text-muted">
+                Page @Model.Data.Pagination.CurrentPage of @Model.Data.Pagination.TotalPages
+                (Total @Model.Data.Pagination.TotalRecords items)
+            </div>
+            <nav>
+                <ul class="pagination mb-0">
+                    <li class="page-item @(Model.Data.Pagination.CurrentPage <= 1 ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Data.Pagination.CurrentPage - 1, pageSize = Model.Data.Pagination.PageSize })">Previous</a>
+                    </li>
+                    @for (int i = 1; i <= Model.Data.Pagination.TotalPages; i++)
+                    {
+                        <li class="page-item @(i == Model.Data.Pagination.CurrentPage ? "active" : "")">
+                            <a class="page-link" href="@Url.Action("Index", new { page = i, pageSize = Model.Data.Pagination.PageSize })">@i</a>
+                        </li>
+                    }
+                    <li class="page-item @(Model.Data.Pagination.CurrentPage >= Model.Data.Pagination.TotalPages ? "disabled" : "")">
+                        <a class="page-link" href="@Url.Action("Index", new { page = Model.Data.Pagination.CurrentPage + 1, pageSize = Model.Data.Pagination.PageSize })">Next</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+}

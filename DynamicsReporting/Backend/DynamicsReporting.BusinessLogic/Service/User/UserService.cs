@@ -6,7 +6,7 @@ namespace DynamicsReporting.ExternalService.Service.User
 
 
     using DynamicsReporting.DataAccess.Repository.User.Interface;
-
+    using DynamicsReporting.Models.Request;
 
     public class UserService : IUserService
     {
@@ -28,10 +28,15 @@ namespace DynamicsReporting.ExternalService.Service.User
             return await _userRepository.GetByUserNameAsync(userName);
         }
 
-        //public async Task<PaginatedResult<UserGroupReportModel>> GroupReportByUserIdAsync(string userId, int currentPage, int pageSize)
-        //{
-        //    return await _userRepository.GroupReportByUserIdAsync(userId, currentPage, pageSize);
-        //}
+        public async Task<PaginatedResult<GroupReportUseModel>> GetGroupReportByUserIdAsync(ReqUserGroupReport reqUserGroup)
+        {
+            return await _userRepository.GetGroupReportByUserIdAsync(reqUserGroup);
+        }
+
+        public async Task<PaginatedResult<UserReportModel>> GetReportByUserId(ReqUserReport userReport)
+        {
+            return await _userRepository.GetReportByUserIdAsync(userReport);
+        }
 
 
     }

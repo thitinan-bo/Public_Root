@@ -15,7 +15,8 @@ namespace DynamicsReporting.DataAccess.Repository.Logging
 
         public LoggingRepository(IConfiguration config)
         {
-            _db = new SqlConnection(config.GetConnectionString("APPConn"));
+            _db = new SqlConnection(config.GetConnectionString("APP"));
+
         
         }
 
@@ -32,7 +33,7 @@ namespace DynamicsReporting.DataAccess.Repository.Logging
                 parameters.Add("@i_FunctionName", log.FunctionName);
                 parameters.Add("@i_ErrorMessages", log.ErrorMessages);
 
-              await _db.ExecuteScalarAsync(sql, parameters);
+              await _db.ExecuteAsync(sql, parameters);
             }
             catch (Exception)
             {

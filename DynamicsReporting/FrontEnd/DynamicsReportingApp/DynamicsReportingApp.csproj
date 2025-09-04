@@ -13,36 +13,62 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<Content Include="Model\**" />
 		<Content Include="Views\**" />
 		<Content Include="Controllers\**" />
 		<Content Include="Services\**" />
 		<Content Include="wwwroot\**" />
-		
+
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Remove="Views\Account\**" />
-	  <Compile Remove="wwwroot\css\**" />
-	  <Compile Remove="wwwroot\js\**" />
-	  <Compile Remove="wwwroot\lib\**" />
-	  <Content Remove="Views\Account\**" />
-	  <Content Remove="wwwroot\css\**" />
-	  <Content Remove="wwwroot\js\**" />
-	  <Content Remove="wwwroot\lib\**" />
-	  <EmbeddedResource Remove="Views\Account\**" />
-	  <EmbeddedResource Remove="wwwroot\css\**" />
-	  <EmbeddedResource Remove="wwwroot\js\**" />
-	  <EmbeddedResource Remove="wwwroot\lib\**" />
-	  <None Remove="Views\Account\**" />
-	  <None Remove="wwwroot\css\**" />
-	  <None Remove="wwwroot\js\**" />
-	  <None Remove="wwwroot\lib\**" />
+		<Compile Remove="Models\**" />
+		<Compile Remove="Model\**" />
+		<Compile Remove="Views\Account\**" />
+		<Compile Remove="wwwroot\js\**" />
+		<Compile Remove="wwwroot\lib\**" />
+		<Compile Remove="wwwroot\NewFolder\**" />
+		<Content Remove="Views\Account\**" />
+		<Content Remove="wwwroot\js\**" />
+		<Content Remove="wwwroot\lib\**" />
+		<Content Remove="wwwroot\NewFolder\**" />
+		<EmbeddedResource Remove="Models\**" />
+		<EmbeddedResource Remove="Model\**" />
+		<EmbeddedResource Remove="Views\Account\**" />
+		<EmbeddedResource Remove="wwwroot\js\**" />
+		<EmbeddedResource Remove="wwwroot\lib\**" />
+		<EmbeddedResource Remove="wwwroot\NewFolder\**" />
+		<None Remove="Models\**" />
+		<None Remove="Model\**" />
+		<None Remove="Views\Account\**" />
+		<None Remove="wwwroot\js\**" />
+		<None Remove="wwwroot\lib\**" />
+		<None Remove="wwwroot\NewFolder\**" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Content Remove="Views\Shared\Login.cshtml" />
-	  <Content Remove="wwwroot\favicon.ico" />
+		<Compile Remove="Controllers\AccountController.cs" />
+		<Compile Remove="Controllers\DashboardController.cs" />
+		<Compile Remove="Controllers\HomeController.cs" />
+		<Compile Remove="Controllers\MenuController.cs" />
+		<Compile Remove="Views\Error.cshtml.cs" />
+		<Compile Remove="Views\Index.cshtml.cs" />
+		<Compile Remove="Views\Privacy.cshtml.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="Controllers\DashboardController.cs" />
+		<Content Remove="Controllers\MenuController.cs" />
+		<Content Remove="Views\Error.cshtml" />
+		<Content Remove="Views\Error.cshtml.cs" />
+		<Content Remove="Views\Index.cshtml" />
+		<Content Remove="Views\Index.cshtml.cs" />
+		<Content Remove="Views\Privacy.cshtml" />
+		<Content Remove="Views\Privacy.cshtml.cs" />
+		<Content Remove="Views\Shared\Login.cshtml" />
+		<Content Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+		<Content Remove="Views\_ViewImports.cshtml" />
+		<Content Remove="Views\_ViewStart.cshtml" />
+		<Content Remove="wwwroot\favicon.ico" />
 	</ItemGroup>
 
 	<!--<ItemGroup>
@@ -63,14 +89,30 @@
 
 	<ItemGroup>
 		<None Remove="Views\Authen\q0ker12r.npf~" />
+		<None Remove="Views\Error.cshtml" />
 		<None Remove="Views\Index.cshtml" />
 		<None Remove="Views\Privacy.cshtml" />
 		<None Remove="Views\Shared\Login.cshtml" />
+		<None Remove="Views\Shared\_ValidationScriptsPartial.cshtml" />
+		<None Remove="Views\Shared\_ViewImports.cshtml" />
+		<None Remove="Views\Shared\_ViewStart.cshtml" />
+		<None Remove="Views\_ViewImports.cshtml" />
+		<None Remove="Views\_ViewStart.cshtml" />
 		<None Remove="wwwroot\favicon.ico" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="ClosedXML" Version="0.105.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="9.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<ProjectReference Include="..\..\Backend\DynamicsReporting.Models\DynamicsReporting.Models.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="Views\NewFolder\" />
+		<Folder Include="Views\Report\" />
 	</ItemGroup>
 
 </Project>

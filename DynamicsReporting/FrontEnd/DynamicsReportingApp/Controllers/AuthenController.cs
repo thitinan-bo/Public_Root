@@ -1,9 +1,7 @@
-﻿using DocumentFormat.OpenXml.EMMA;
-using DynamicsReportingApp.Model.Authen;
+﻿using DynamicsReporting.Models.Authen;
 using DynamicsReportingApp.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-
 public class AuthenController : Controller
 {
     private readonly IApiService _apiService;
@@ -19,22 +17,40 @@ public class AuthenController : Controller
     [HttpGet]
     public async Task<IActionResult> Login()
     {
-        // var responseDataModel = new ResponseDataModel<List<BranchModel>>();
+        var model = new AuthenRequestModel();
+        List<SelectListItem> items = new List<SelectListItem>();
 
-        var branches = await _apiService.GetBranchAsync();
-
-        var model = new AuthenRequestModel
+        try
         {
-            Branches = branches.Select(static b => new SelectListItem
-            {
-                Value = b.BranchCode,
-                Text = b.BranchName
-            })
-        };
+            var result = await _apiService.BranchAll(); // คืนค่า List<BranchModel>
+
+            ViewBag.ddlBranches = result
+               .Select(b => new SelectListItem
+               {
+                   Value = b.branch_code,
+                   Text = b.branch_name
+               })
+               .ToList();
+
+            //foreach (var item in result.ToList())
+            //{
+            //    //model.Branches.Add(new SelectListItem { Text = item.branch_name, Value = item.branch_code });
+
+            //    items.Add(new SelectListItem { Text = item.branch_name, Value = item.branch_code });
+
+            //}
+
+            //ViewBag.ddlBranches = items;
+
+
+        }
+        catch
+        {
+            ModelState.AddModelError("", "เกิดข้อผิดพลาดในการเชื่อมต่อ กรุณาลองใหม่อีกครั้ง");
+        }
+
 
         return View(model);
-
-
     }
 
     [HttpGet]
@@ -42,38 +58,31 @@ public class AuthenController : Controller
     {
         return RedirectToAction(nameof(Login));
     }
-
-
-    private async Task PopulateBranches(AuthenRequestModel model)
-    {
-        var branches = await _apiService.GetBranchAsync();
-        model.Branches = branches.Select(b => new SelectListItem
-        {
-            Value = b.BranchCode,
-            Text = b.BranchName
-        });
-    }
-
-
-
+ 
     [HttpPost]
     public async Task<IActionResult> Login(AuthenRequestModel model)
     {
-        if (!ModelState.IsValid)
-        {
-            await PopulateBranches(model);
-            return View(model);
-        }
+        //if (!ModelState.IsValid)
+        //{
+        //    await PopulateBranches(model);
+        //    return View(model);
+        //}
 
         try
         {
-            var response = await _apiService.AuthenAsync(model);
+            model.Username = model.Username?.Trim();
+
+
+            var response = await _apiService.Authen(model);
             if (response?.Data != null && response.Data.IsAuthenticated)
             {
                 // Store session data
                 HttpContext.Session.SetString("BranchCode", response.Data.BranchCode ?? "");
                 HttpContext.Session.SetString("BranchName", response.Data.BranchName ?? "");
                 HttpContext.Session.SetString("DefaultServer", response.Data.DefaultServer ?? "");
+
+                HttpContext.Session.SetString("Username", model.Username ?? "");
+                HttpContext.Session.SetInt32("UserId", response.Data.UserId ?? 0);
 
                 return RedirectToAction("Index", "Group");
             }
@@ -86,7 +95,7 @@ public class AuthenController : Controller
             // Log the exception
         }
 
-        await PopulateBranches(model);
+        // await PopulateBranches(model);
         return View(model);
     }
 }

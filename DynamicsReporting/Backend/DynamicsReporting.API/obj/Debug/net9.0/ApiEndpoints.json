@@ -1,7 +1,7 @@
 [
   {
     "ContainingType": "DynamicsReporting.API.Controllers.Authentication.AuthenController",
-    "Method": "Authen",
+    "Method": "AuthenAsync",
     "RelativePath": "api/Authen/Authen",
     "HttpMethod": "POST",
     "IsController": true,
@@ -17,8 +17,8 @@
   },
   {
     "ContainingType": "DynamicsReporting.API.Controllers.Authentication.AuthenController",
-    "Method": "GetBranch",
-    "RelativePath": "api/Authen/GetBranch",
+    "Method": "GetBranchAsync",
+    "RelativePath": "api/Authen/BranchAll",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -28,7 +28,7 @@
   {
     "ContainingType": "DynamicsReporting.API.Controllers.Authentication.AuthenController",
     "Method": "GetBranchByBranchCodeAsync",
-    "RelativePath": "api/Authen/GetBranchByBranchCode",
+    "RelativePath": "api/Authen/BranchByBranchCode",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -162,56 +162,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "DynamicsReporting.API.Controllers.User.UserController",
-    "Method": "GetAllAsync",
-    "RelativePath": "api/user/User/getAll",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "currentPage",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "DynamicsReporting.API.Controllers.User.UserController",
-    "Method": "GroupReportByUserIdAsync",
-    "RelativePath": "api/user/User/groupReport/{userId}",
-    "HttpMethod": "GET",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "userId",
-        "Type": "System.Int32",
-        "IsRequired": true
-      },
-      {
-        "Name": "currentPage",
-        "Type": "System.Int32",
-        "IsRequired": false
-      },
-      {
-        "Name": "pageSize",
-        "Type": "System.Int32",
-        "IsRequired": false
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "DynamicsReporting.API.Controllers.User.UserController",
+    "ContainingType": "UserController",
     "Method": "GetUserByUserName",
-    "RelativePath": "api/user/User/userId/{userName}",
+    "RelativePath": "api/User/by-username/{userName}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -219,6 +172,59 @@
       {
         "Name": "userName",
         "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "GetAllAsync",
+    "RelativePath": "api/User/getAll",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "currentPage",
+        "Type": "System.Int32",
+        "IsRequired": false
+      },
+      {
+        "Name": "pageSize",
+        "Type": "System.Int32",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "GetGroupReportByUserIdAsync",
+    "RelativePath": "api/User/GroupReport",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "req",
+        "Type": "DynamicsReporting.Models.Request.ReqUserGroupReport",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "GetReportByUserIdAsync",
+    "RelativePath": "api/User/Report",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "userReport",
+        "Type": "DynamicsReporting.Models.Request.ReqUserReport",
         "IsRequired": true
       }
     ],

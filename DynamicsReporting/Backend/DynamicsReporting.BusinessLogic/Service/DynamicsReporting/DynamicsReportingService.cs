@@ -43,7 +43,7 @@ public class DynamicsReportingService : IDynamicsReportingService
                 .ToList();
 
             response.Data = pagedData;
-            response.TotalCount = allResults.Count;
+        //    response.TotalCount = allResults.Count;
             response.Pagination = new Pagination
             {
                 CurrentPage = currentPage,
@@ -116,7 +116,7 @@ public class DynamicsReportingService : IDynamicsReportingService
                 .ToList();
 
             response.Data = pagedData;
-            response.TotalCount = allResults.Count;
+           // response.TotalCount = allResults.Count;
             response.Pagination = new Pagination
             {
                 CurrentPage = currentPage,

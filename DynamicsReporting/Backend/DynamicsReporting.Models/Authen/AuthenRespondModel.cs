@@ -11,6 +11,7 @@ namespace DynamicsReporting.Models.Authen
 
  
         //public string? Role { get; set; }
+        public int? UserId { get; set; }
         public string? DisplayName { get; set; }
         public string? BranchCode { get; set; }
         public string? BranchName { get; set; }

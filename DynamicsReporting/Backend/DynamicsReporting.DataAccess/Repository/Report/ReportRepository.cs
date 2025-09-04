@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using DynamicsReporting.DataAccess.Repository.Report.Interface;
 using DynamicsReporting.Models;
+using DynamicsReporting.Models.Request;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -29,7 +30,7 @@ namespace DynamicsReporting.DataAccess.Repository.Report
                 .ToList();
 
             response.Data = pagedData;
-            response.TotalCount = allResults.Count;
+            //    response.TotalCount = allResults.Count;
             response.Pagination = new Pagination
             {
                 CurrentPage = currentPage,
@@ -53,7 +54,7 @@ namespace DynamicsReporting.DataAccess.Repository.Report
                 .ToList();
 
             response.Data = pagedData;
-            response.TotalCount = allResults.Count;
+
             response.Pagination = new Pagination
             {
                 CurrentPage = currentPage,
@@ -63,6 +64,31 @@ namespace DynamicsReporting.DataAccess.Repository.Report
 
             return response;
         }
+
+
+        ////public async Task<PaginatedResult<ReportModel>> GetReportByGroupIdAsync(ReqUserGroupReport groupReport)
+        //{
+        //    var response = new PaginatedResult<ReportModel>();
+        //    List<ReportModel> allResults = new();
+
+        //    var sql = "EXEC usp_GetReportByGroupId @i_GroupID";
+        //    allResults = (await _db.QueryAsync<ReportModel>(sql, new { i_GroupID = groupReport.GroupID })).ToList();
+        //    var pagedData = allResults
+        //        .Skip((groupReport.currentPage - 1) * groupReport.pageSize)
+        //        .Take(groupReport.pageSize)
+        //        .ToList();
+
+        //    response.Data = pagedData;
+
+        //    response.Pagination = new Pagination
+        //    {
+        //        CurrentPage = groupReport.currentPage,
+        //        PageSize = groupReport.pageSize,
+        //        TotalRecords = allResults.Count
+        //    };
+
+        //    return response;
+        //}
 
 
 

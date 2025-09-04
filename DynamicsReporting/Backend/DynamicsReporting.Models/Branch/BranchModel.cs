@@ -1,4 +1,5 @@
-﻿
+﻿namespace DynamicsReporting.Models;
+
 using System.Text.Json.Serialization;
 
 public class BranchModel

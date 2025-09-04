@@ -1,4 +1,5 @@
 ﻿using DynamicsReporting.ExternalService.Service.Authentication.Interface;
+using DynamicsReporting.Models;
 using DynamicsReporting.Models.Authen;
 using DynamicsReporting.Models.Base;
 using Microsoft.AspNetCore.Mvc;
@@ -36,8 +37,8 @@ namespace DynamicsReporting.API.Controllers.Authentication
 
 
 
-        [HttpGet("GetBranch")]
-        public async Task<IActionResult> GetBranch()
+        [HttpGet("BranchAll")]
+        public async Task<IActionResult> GetBranchAsync()
         {
             var responseData = new ResponseDataModel<List<BranchModel>>();
 
@@ -91,7 +92,40 @@ namespace DynamicsReporting.API.Controllers.Authentication
 
 
 
-        [HttpGet("GetBranchByBranchCode/")]
+        [HttpPost("Authen")]
+        public async Task<IActionResult> AuthenAsync([FromBody] AuthenRequestModel authen)
+        {
+            var responseData = new AuthenResponseModel();
+
+            try
+            {
+                responseData = await _authenService.AuthenAsync(authen);
+
+                return StatusCode(200, responseData);
+            }
+            catch (Exception ex)
+            {
+                string ErrMessage = "ErrorCode 500 " + ex.Message + " | User : " + authen.Username + "| BranchCode :" + authen.BranchCode;
+                AddLogModel addLogModel = new AddLogModel();
+                addLogModel.IPAddress = _utility.GetLocalIPAddress();
+                addLogModel.HostName = _utility.GetHost();
+                addLogModel.ErrorMessages = ErrMessage;
+                addLogModel.FunctionName = "Authen";
+                await _logger.AddLogAsync(addLogModel);
+
+                var errorResponse = new ResponseDataModel<AuthenResponseModel>
+                {
+                    ErrorCode = "500",
+                    ErrorMessage = ErrMessage,
+                    Status = ResponseStatus.Error,
+                    ErrorType = ResponseErrorType.Exception,
+                    StatusCode = 500
+                };
+                return StatusCode(500, errorResponse);
+            }
+        }
+
+        [HttpGet("BranchByBranchCode")]
         public async Task<IActionResult> GetBranchByBranchCodeAsync([FromQuery] string branchCode)
         {
 
@@ -144,63 +178,6 @@ namespace DynamicsReporting.API.Controllers.Authentication
 
         }
 
-
-        [HttpPost("Authen")]
-        public async Task<IActionResult> Authen([FromBody] AuthenRequestModel authen)
-        {
-
-
-            var responseData = new ResponseDataModel<AuthenResponseModel>();
-
-            try
-            {
-                var Model = await _authenService.AuthenAsync(authen);
-                if (Model != null)
-                {
-                    responseData.Data = Model;
-                    responseData.ErrorCode = "0";
-                    responseData.ErrorMessage = "Success";
-                    responseData.Status = ResponseStatus.Success;
-                    responseData.ErrorType = ResponseStatus.Success;
-                    responseData.StatusCode = 200;
-
-                    return StatusCode(HttpStatus.OK, responseData);
-                }
-
-                responseData.ErrorCode = "1";
-                responseData.ErrorMessage = "No data found";
-                responseData.Status = ResponseStatus.Failed;
-                responseData.ErrorType = "DataNotFound";
-                responseData.StatusCode = 404;
-
-                return StatusCode(HttpStatus.NotFound, responseData);
-
-
-            }
-            catch (Exception ex)
-            {
-                string ErrMessage = "ErrorCode 500 " + ex.Message + " | User : " + authen.Username + "| BranchCode :" + authen.BranchCode;
-
-                AddLogModel addLogModel = new AddLogModel();
-                addLogModel.IPAddress = _utility.GetLocalIPAddress();
-                addLogModel.HostName = _utility.GetHost();
-                addLogModel.ErrorMessages = ErrMessage;
-                addLogModel.FunctionName = "Authen";
-
-                await _logger.AddLogAsync(addLogModel);
-
-                responseData.ErrorCode = "500";
-                responseData.ErrorMessage = ErrMessage;
-                responseData.Status = ResponseStatus.Error;
-                responseData.ErrorType = ResponseErrorType.Exception;
-                responseData.StatusCode = 500;
-
-                return StatusCode(500, responseData);
-            }
-
-
-
-        }
 
 
 

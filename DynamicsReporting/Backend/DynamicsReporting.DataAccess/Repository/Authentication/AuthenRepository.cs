@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using DynamicsReporting.DataAccess.Repository.Authentication.Interface;
+using DynamicsReporting.Models;
 using DynamicsReporting.Models.Authen;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
@@ -11,12 +12,12 @@ namespace DynamicsReporting.DataAccess.Repository.Authentication
     public class AuthenRepository : IAuthenRepository
     {
         private readonly IDbConnection _dbAuthenApp;
-        private readonly IDbConnection _dbCenter; // Added missing field declaration
+        //private readonly IDbConnection _dbCenter; // Added missing field declaration
 
         public AuthenRepository(IConfiguration config)
         {
             _dbAuthenApp = new SqlConnection(config.GetConnectionString("APP"));
-            _dbCenter = new SqlConnection(config.GetConnectionString("CENTER"));
+        //    _dbCenter = new SqlConnection(config.GetConnectionString("CENTER"));
         }
 
         public async Task<List<BranchModel>> GetBranchAsync()
@@ -83,6 +84,31 @@ namespace DynamicsReporting.DataAccess.Repository.Authentication
 
             return result;
         }
+
+
+
+
+        public async Task<int> GetUserIDAsync(string UserName, string branchCode)
+        {
+            int userId = 0;
+
+            try
+            {
+                var sql = "EXEC usp_GetUserByName @i_UserName, @i_BranchCode";
+                var parameters = new DynamicParameters();
+                parameters.Add("@i_UserName", UserName);
+                parameters.Add("@i_BranchCode", branchCode);
+                userId = await _dbAuthenApp.QueryFirstOrDefaultAsync<int>(sql, parameters);
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
+
+            return userId;
+        }
+
+
 
     }
 }

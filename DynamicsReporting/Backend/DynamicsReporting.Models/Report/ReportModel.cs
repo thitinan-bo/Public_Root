@@ -1,9 +1,10 @@
-﻿
+﻿namespace DynamicsReporting.Models;
+
 public class ReportModel
 {
     public int ReportID { get; set; }
     public string ReportName { get; set; }
-    public bool ReportStatus { get; set; }
+    //public bool ReportStatus { get; set; }
 
 }
 

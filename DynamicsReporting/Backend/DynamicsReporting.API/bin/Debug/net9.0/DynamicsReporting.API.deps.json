@@ -1751,6 +1751,9 @@
         }
       },
       "DynamicsReporting.Models/1.0.0": {
+        "dependencies": {
+          "Microsoft.AspNetCore.Mvc": "2.3.0"
+        },
         "runtime": {
           "DynamicsReporting.Models.dll": {
             "assemblyVersion": "1.0.0.0",

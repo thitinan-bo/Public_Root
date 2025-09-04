@@ -5,31 +5,10 @@
     "version": "v1"
   },
   "paths": {
-    "/api/Authen/GetBranch": {
+    "/api/Authen/BranchAll": {
       "get": {
         "tags": [
           "Authen"
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/Authen/GetBranchByBranchCode": {
-      "get": {
-        "tags": [
-          "Authen"
-        ],
-        "parameters": [
-          {
-            "name": "branchCode",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            }
-          }
         ],
         "responses": {
           "200": {
@@ -62,6 +41,27 @@
             }
           }
         },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/Authen/BranchByBranchCode": {
+      "get": {
+        "tags": [
+          "Authen"
+        ],
+        "parameters": [
+          {
+            "name": "branchCode",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK"
@@ -118,7 +118,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 1
             }
           },
           {
@@ -126,7 +127,8 @@
             "in": "query",
             "schema": {
               "type": "integer",
-              "format": "int32"
+              "format": "int32",
+              "default": 0
             }
           }
         ],
@@ -245,7 +247,7 @@
         }
       }
     },
-    "/api/user/User/getAll": {
+    "/api/User/getAll": {
       "get": {
         "tags": [
           "User"
@@ -275,7 +277,7 @@
         }
       }
     },
-    "/api/user/User/userId/{userName}": {
+    "/api/User/by-username/{userName}": {
       "get": {
         "tags": [
           "User"
@@ -297,38 +299,61 @@
         }
       }
     },
-    "/api/user/User/groupReport/{userId}": {
-      "get": {
+    "/api/User/GroupReport": {
+      "post": {
         "tags": [
           "User"
         ],
-        "parameters": [
-          {
-            "name": "userId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "currentPage",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
-            }
-          },
-          {
-            "name": "pageSize",
-            "in": "query",
-            "schema": {
-              "type": "integer",
-              "format": "int32"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReqUserGroupReport"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReqUserGroupReport"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReqUserGroupReport"
+              }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/User/Report": {
+      "post": {
+        "tags": [
+          "User"
         ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReqUserReport"
+              }
+            },
+            "text/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReqUserReport"
+              }
+            },
+            "application/*+json": {
+              "schema": {
+                "$ref": "#/components/schemas/ReqUserReport"
+              }
+            }
+          }
+        },
         "responses": {
           "200": {
             "description": "OK"
@@ -348,19 +373,106 @@
         "type": "object",
         "properties": {
           "username": {
-            "maxLength": 50,
-            "minLength": 0,
+            "minLength": 1,
             "type": "string"
           },
           "password": {
-            "maxLength": 100,
-            "minLength": 0,
-            "type": "string"
+            "minLength": 1,
+            "type": "string",
+            "format": "password"
           },
           "branchCode": {
-            "maxLength": 50,
-            "minLength": 0,
+            "minLength": 1,
             "type": "string"
+          },
+          "branches": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SelectListItem"
+            },
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReqUserGroupReport": {
+        "required": [
+          "userID"
+        ],
+        "type": "object",
+        "properties": {
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ReqUserReport": {
+        "required": [
+          "userID"
+        ],
+        "type": "object",
+        "properties": {
+          "userID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "groupID": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "currentPage": {
+            "type": "integer",
+            "format": "int32"
+          },
+          "pageSize": {
+            "type": "integer",
+            "format": "int32"
+          }
+        },
+        "additionalProperties": false
+      },
+      "SelectListGroup": {
+        "type": "object",
+        "properties": {
+          "disabled": {
+            "type": "boolean"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "SelectListItem": {
+        "type": "object",
+        "properties": {
+          "disabled": {
+            "type": "boolean"
+          },
+          "group": {
+            "$ref": "#/components/schemas/SelectListGroup"
+          },
+          "selected": {
+            "type": "boolean"
+          },
+          "text": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "type": "string",
+            "nullable": true
           }
         },
         "additionalProperties": false

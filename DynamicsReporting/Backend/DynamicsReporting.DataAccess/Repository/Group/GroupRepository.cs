@@ -2,6 +2,7 @@
 using Dapper;
 using DynamicsReporting.DataAccess.Repository.Group.Interface;
 using DynamicsReporting.Models;
+using DynamicsReporting.Models.Request;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using System.Data;
@@ -17,7 +18,7 @@ namespace DynamicsReporting.DataAccess.Repository.Group
 
         public GroupRepository(IConfiguration config)
         {
-            _db = new SqlConnection(config.GetConnectionString("APPConn"));
+            _db = new SqlConnection(config.GetConnectionString("APP"));
 
         }
 
@@ -34,7 +35,7 @@ namespace DynamicsReporting.DataAccess.Repository.Group
             .ToList();
 
             response.Data = pagedData;
-            response.TotalCount = allResults.Count;
+             
             response.Pagination = new Pagination
             {
                 CurrentPage = currentPage,
@@ -57,7 +58,7 @@ namespace DynamicsReporting.DataAccess.Repository.Group
           .ToList();
 
             response.Data = pagedData;
-            response.TotalCount = allResults.Count;
+          //  response.TotalCount = allResults.Count;
             response.Pagination = new Pagination
             {
                 CurrentPage = currentPage,
@@ -68,27 +69,28 @@ namespace DynamicsReporting.DataAccess.Repository.Group
             return response;
         }
 
-        public async Task<PaginatedResult<GroupReportUseModel>> GetGroupReportByUserIdAsync(string userID, int currentPage, int pageSize)
-        {
-            var response = new PaginatedResult<GroupReportUseModel>();
-            var sql = "EXEC usp_UserGroupReportByUserId @i_UserID";
-            var allResults = (await _db.QueryAsync<GroupReportUseModel>(sql, new { i_UserID = userID })).ToList();
+        //public async Task<PaginatedResult<GroupReportUseModel>> GetGroupReportByUserIdAsync(ReqUserGroupReport reqUserGroup)
+        //{
 
-            var pagedData = allResults
-             .Skip((currentPage - 1) * pageSize)
-             .Take(pageSize)
-             .ToList();
+        //    var response = new PaginatedResult<GroupReportUseModel>();
+        //    var sql = "EXEC usp_UserGroupReportByUserId @i_UserID";
+        //    var allResults = (await _db.QueryAsync<GroupReportUseModel>(sql, new { i_UserID = reqUserGroup.UserID })).ToList();
 
-            response.Data = pagedData;
-            response.TotalCount = allResults.Count;
-            response.Pagination = new Pagination
-            {
-                CurrentPage = currentPage,
-                PageSize = pageSize,
-                TotalRecords = allResults.Count
-            };
+        //    var pagedData = allResults
+        //     .Skip((reqUserGroup.currentPage - 1) * reqUserGroup.pageSize)
+        //     .Take(reqUserGroup.pageSize)
+        //     .ToList();
 
-            return response;
-        }
+        //    response.Data = pagedData;
+        //  //  response.TotalCount = allResults.Count;
+        //    response.Pagination = new Pagination
+        //    {
+        //        CurrentPage = reqUserGroup.currentPage,
+        //        PageSize = reqUserGroup.pageSize,
+        //        TotalRecords = allResults.Count
+        //    };
+
+        //    return response;
+        //}
     }
 }

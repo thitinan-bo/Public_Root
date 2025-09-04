@@ -1,5 +1,6 @@
 ﻿using DynamicsReporting.DataAccess.Repository.Report.Interface;
 using DynamicsReporting.Models;
+using DynamicsReporting.Models.Request;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,7 @@ namespace DynamicsReporting.ExternalService.Service.Report.Interface
         Task<PaginatedResult<ReportModel>> GetReportByIdAsync(int groupId, int currentPage, int pageSize);
 
 
+        //   Task<PaginatedResult<ReportModel>> GetReportByGroupIdAsync(ReqUserGroupReport groupReport);
 
     }
 }

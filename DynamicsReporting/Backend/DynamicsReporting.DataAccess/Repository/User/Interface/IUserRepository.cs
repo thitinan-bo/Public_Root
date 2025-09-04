@@ -1,4 +1,5 @@
 ﻿using DynamicsReporting.Models;
+using DynamicsReporting.Models.Request;
 
 namespace DynamicsReporting.DataAccess.Repository.User.Interface
 {
@@ -6,8 +7,10 @@ namespace DynamicsReporting.DataAccess.Repository.User.Interface
     {
         Task<PaginatedResult<UserModel>> GetAllAsync(int currentPage, int pageSize);
         Task<UserModel> GetByUserNameAsync(string userName);
-        //Task<PaginatedResult<UserGroupReportModel>> GroupReportByUserIdAsync(string userId, int currentPage, int pageSize);
 
+        Task<PaginatedResult<GroupReportUseModel>> GetGroupReportByUserIdAsync(ReqUserGroupReport reqUserGroup);
+
+        Task<PaginatedResult<UserReportModel>> GetReportByUserIdAsync(ReqUserReport userReport);
 
     }
 }

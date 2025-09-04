@@ -1,6 +1,10 @@
-﻿using DynamicsReportingApp.Model.Authen;
-using System.Collections.Generic;
-using System.Text.Json;
+﻿
+using DynamicsReporting.Models;
+using DynamicsReporting.Models.Authen;
+using DynamicsReporting.Models.Request;
+using Microsoft.AspNetCore.Mvc;
+
+
 namespace DynamicsReportingApp.Services;
 
 public class ApiService : IApiService
@@ -8,55 +12,179 @@ public class ApiService : IApiService
     private readonly HttpClient _http;
     private readonly IConfiguration _config;
 
-    private string AuthenGetBranch = "/Authen/GetBranch";
-    private string AuthenGetBranchByBranchCode = "Authen/GetBranchByBranchCode/{branchCode}";
-    private string Authen = "/Authen/Authen";
- 
+
+    private const string AuthenGetBranch = "/Authen/BranchAll";
+    private const string AuthenUser = "/Authen/Authen";
+    private const string GroupReportByUserId = "/Group/GroupReportByUserId";
+
+    //private const string GroupReportByGroupId = "Report/groupId/{0}";
+
+    private const string AuthenGetBranchByBranchCode = "Authen/BranchByBranchCode/{branchCode}";
+
+    private const string GroupGetAll = "Group/GetAll";
+    private const string GroupGetById = "Group/{GroupId}";
+
+
+
     public ApiService(HttpClient http, IConfiguration config)
     {
         _http = http;
         _config = config;
     }
 
-    public async Task<List<BranchModel>> GetBranchAsync()
-    {
-        ResponseDataModel<List<BranchModel>> response = new ResponseDataModel<List<BranchModel>>();
-        List<BranchModel> branches = new List<BranchModel>();
 
+
+    #region Authentication
+    public async Task<List<BranchModel>> BranchAll()
+    {
+        var responseData = new ResponseDataModel<List<BranchModel>>();
         try
         {
             var apiUrl = _config.GetValue<string>("ApiBaseUrl") + AuthenGetBranch;
+            responseData = await _http.GetFromJsonAsync<ResponseDataModel<List<BranchModel>>>(apiUrl);
 
-
-
-            response = await _http.GetFromJsonAsync<ResponseDataModel<List<BranchModel>>>(apiUrl);
-
-            branches = response.Data;
+            //if (responseData == null)
+            //{
+            //    responseData = new ResponseDataModel<List<BranchModel>>
+            //    {
+            //        ErrorCode = "1",
+            //        ErrorMessage = "No data found",
+            //        Data = new List<BranchModel>()
+            //    };
+            //}
+            //else if (responseData.ErrorCode != "0")
+            //{
+            //    responseData.Data = new List<BranchModel>();
+            //}
 
         }
         catch (Exception ex)
         {
-            response.ErrorMessage = ex.Message;
 
+        }
+        return responseData.Data;
 
-            throw;
+    }
+
+    public async Task<ResponseDataModel<AuthenResponseModel>> Authen(AuthenRequestModel model)
+    {
+        var responseData = new ResponseDataModel<AuthenResponseModel>();
+
+        try
+        {
+            var apiUrl = _config.GetValue<string>("ApiBaseUrl") + AuthenUser;
+            var response = await _http.PostAsJsonAsync(apiUrl, model);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<AuthenResponseModel>();
+
+            if (result != null)
+            {
+                responseData.Data = result;
+                responseData.ErrorCode = "0";
+                responseData.ErrorMessage = "Success";
+
+            }
+            else
+            {
+                responseData.ErrorCode = "1";
+                responseData.ErrorMessage = "No data found";
+
+            }
+
+            return responseData;
+        }
+        catch (Exception ex)
+        {
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = ex.Message;
+
+            return responseData;
+        }
+    }
+    public async Task<ResponseDataModel<PaginatedResult<GroupReportUseModel>>> GetGroupReportByUserIdAsync(ReqUserGroup reqUserGroup)
+    {
+
+        var responseData = new ResponseDataModel<PaginatedResult<GroupReportUseModel>>();
+
+        try
+        {
+            var apiUrl = _config.GetValue<string>("ApiBaseUrl") + GroupReportByUserId;
+            var response = await _http.PostAsJsonAsync(apiUrl, reqUserGroup);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<ResponseDataModel<PaginatedResult<GroupReportUseModel>>>();
+
+            if (result != null)
+            {
+                responseData.Data = result.Data;
+                responseData.ErrorCode = result.ErrorCode;
+                responseData.ErrorMessage = result.ErrorMessage;
+            }
+            else
+            {
+                responseData.ErrorCode = "1";
+                responseData.ErrorMessage = "No data found";
+            }
+        }
+        catch (Exception ex)
+        {
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = ex.Message;
         }
 
-        return response?.Data ?? new List<BranchModel>();
+        return responseData;
     }
 
+    #endregion
 
+    #region Report
 
-    public async Task<ResponseDataModel<AuthenResponseModel>> AuthenAsync(AuthenRequestModel model)
+    //[HttpPost("groupId/{groupId}")]
+    //public async Task<IActionResult> GetReportByGroupIdAsync(int groupId, int currentPage, int pageSize)
+    private const string GroupReportByGroupId = "Report/groupId/{0}";
+    public async Task<ResponseDataModel<PaginatedResult<GroupReportUseModel>>> GetReportByGroupIdAsync(ReqUserGroupReport reqUserGroup)
     {
-        var apiUrl = _config.GetValue<string>("ApiBaseUrl") + Authen;
-        var response = await _http.PostAsJsonAsync(apiUrl, model);
-        response.EnsureSuccessStatusCode();
+      
+        var responseData = new ResponseDataModel<PaginatedResult<GroupReportUseModel>>();
 
-        var result = await response.Content.ReadFromJsonAsync<ResponseDataModel<AuthenResponseModel>>();
-        return result ?? new ResponseDataModel<AuthenResponseModel>();
+        try
+        {
+            var apiUrl = _config.GetValue<string>("ApiBaseUrl") + GroupReportByUserId;
+            var response = await _http.PostAsJsonAsync(apiUrl, reqUserGroup);
+            response.EnsureSuccessStatusCode();
+            var result = await response.Content.ReadFromJsonAsync<ResponseDataModel<PaginatedResult<GroupReportUseModel>>>();
+
+            if (result != null)
+            {
+                responseData.Data = result.Data;
+                responseData.ErrorCode = result.ErrorCode;
+                responseData.ErrorMessage = result.ErrorMessage;
+            }
+            else
+            {
+                responseData.ErrorCode = "1";
+                responseData.ErrorMessage = "No data found";
+            }
+        }
+        catch (Exception ex)
+        {
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = ex.Message;
+        }
+
+        return responseData;
+
+
     }
 
-
+    #endregion
 
 }
+
+
+
+
+
+
+
+
+

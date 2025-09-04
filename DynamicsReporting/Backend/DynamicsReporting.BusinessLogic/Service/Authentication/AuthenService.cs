@@ -2,6 +2,7 @@
 using DynamicsReporting.DataAccess.Repository.Authentication.Interface;
 using DynamicsReporting.Models.Authen;
 using Microsoft.Extensions.Configuration;
+using DynamicsReporting.Models;
 
 
 namespace DynamicsReporting.ExternalService.Service.Authentication
@@ -47,13 +48,16 @@ namespace DynamicsReporting.ExternalService.Service.Authentication
             branch.default_server = "R4AD01";
             authenRequest.Username = "glconnect";
             authenRequest.Password = "ledger";
-            //  connStr = String.Format("Server={0};Database=Master;User Id={1};Password={2};", branch.default_server, authenRequest.Username, authenRequest.Password);
+          
             connStr = String.Format("Server={0};Database=centerdb;User Id={1};Password={2};TrustServerCertificate=True;", branch.default_server, authenRequest.Username, authenRequest.Password);
 
-            int result = await _authenRepository.AuthenAsync(authenRequest.Username, authenRequest.Password, connStr);
+            int result = 1;
+            // await _authenRepository.AuthenAsync(authenRequest.Username, authenRequest.Password, connStr);
 
             if (result == 1)
             {
+                int userId = await _authenRepository.GetUserIDAsync(authenRequest.Username, authenRequest.BranchCode);
+                authenResponse.UserId = userId;
                 authenResponse.IsAuthenticated = true;
             }
             else

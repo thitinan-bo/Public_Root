@@ -1,8 +1,9 @@
 ﻿namespace DynamicsReporting.ExternalService.Service.Report
 {
-    using DynamicsReporting.ExternalService.Service.Report.Interface;
     using DynamicsReporting.DataAccess.Repository.Report.Interface;
+    using DynamicsReporting.ExternalService.Service.Report.Interface;
     using DynamicsReporting.Models;
+    using DynamicsReporting.Models.Request;
 
     public class ReportService : IReportService
     {
@@ -22,5 +23,10 @@
         {
             return _reportRepository.GetReportByIdAsync(reportId, currentPage, pageSize);
         }
+
+        //public Task<PaginatedResult<ReportModel>> GetReportByGroupIdAsync(ReqUserGroupReport groupReport)
+        //{
+        //    return _reportRepository.GetReportByGroupIdAsync(groupReport);
+        //}
     }
 }

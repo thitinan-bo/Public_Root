@@ -7,11 +7,7 @@
         "Action": "Start"
       },
       {
-        "Path": "FrontEnd\\DynamicsReportingApp\\DynamicsReportingApp\\DynamicsReportingApp.csproj",
-        "Action": "Start"
-      },
-      {
-        "Path": "Backend\\DynamicsReporting.ExternalService\\DynamicsReporting.ExternalService.csproj",
+        "Path": "FrontEnd\\DynamicsReporting.Web\\DynamicsReporting.Web.csproj",
         "Action": "Start"
       }
     ]
