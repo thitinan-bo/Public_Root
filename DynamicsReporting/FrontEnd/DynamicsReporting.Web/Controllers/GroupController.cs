@@ -1,7 +1,7 @@
 ﻿using DynamicsReporting.Models;
 using DynamicsReporting.Models.Request;
 using DynamicsReporting.Web.Services;
- 
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace DynamicsReporting.Web.Controllers
@@ -40,9 +40,9 @@ namespace DynamicsReporting.Web.Controllers
                 // เรียก API เพื่อดึงข้อมูล Group Reports ตามสิทธิ์ของ User
                 var reqUserGroup = new ReqUserGroup
                 {
-                    UserID = userId ?? 0,
-                    currentPage = page,
-                    pageSize = pageSize
+                    UserId = userId ?? 0,
+                    CurrentPage = page,
+                    PageSize = pageSize
                 };
 
                 var groupReports = await _apiService.GetGroupReportByUserIdAsync(reqUserGroup);
@@ -56,5 +56,43 @@ namespace DynamicsReporting.Web.Controllers
                 return View(new ResponseDataModel<PaginatedResult<GroupReportUseModel>>());
             }
         }
+
+
+
+
+        // แสดงหน้า ViewReport
+        public async Task<IActionResult> ViewReport(int reportId)
+        {
+            var config = await _apiService.GetConfigReport(reportId);
+
+            var responseData = new ResponseDataModel<ReportConfigModel>
+            {
+                Data = config.Data,
+                ErrorCode = "0",
+                Status = ResponseStatus.Success,
+                ErrorType = ResponseStatus.Success,
+                StatusCode = 200
+            };
+
+            return View(responseData);
+        }
+
+        // Execute Report → Return JSON
+        [HttpPost]
+        public async Task<IActionResult> ExecuteReport([FromBody] ReportRequest request)
+        {
+            try
+            {
+                var data = await _apiService.ExecuteReportPage(request);
+                return Json(new { success = true, data });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, error = ex.Message });
+            }
+        }
+
+
+
     }
 }

@@ -173,6 +173,43 @@
         "Name": "userName",
         "Type": "System.String",
         "IsRequired": true
+      },
+      {
+        "Name": "branchCode",
+        "Type": "System.String",
+        "IsRequired": false
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "GetReportConfigByReportIdAsync",
+    "RelativePath": "api/User/ConfigReport",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "viewRequest",
+        "Type": "DynamicsReporting.Models.ReportViewRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "UserController",
+    "Method": "ExecuteReport",
+    "RelativePath": "api/User/execute",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "DynamicsReporting.Models.ReportRequest",
+        "IsRequired": true
       }
     ],
     "ReturnTypes": []

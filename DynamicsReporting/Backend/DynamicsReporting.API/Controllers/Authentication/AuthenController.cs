@@ -31,11 +31,7 @@ namespace DynamicsReporting.API.Controllers.Authentication
             _logger = loggingRepository;
             _utility = utility;
         }
-
-
-
-
-
+         
 
         [HttpGet("BranchAll")]
         public async Task<IActionResult> GetBranchAsync()
@@ -100,6 +96,8 @@ namespace DynamicsReporting.API.Controllers.Authentication
             try
             {
                 responseData = await _authenService.AuthenAsync(authen);
+
+
 
                 return StatusCode(200, responseData);
             }

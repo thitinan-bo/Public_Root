@@ -1,7 +1,10 @@
-﻿using DynamicsReporting.Models;
+﻿
+using DynamicsReporting.Models;
 using DynamicsReporting.Models.Request;
 using DynamicsReporting.Web.Services;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Text.Json;
 
 namespace DynamicsReporting.Web.Controllers
 {
@@ -10,10 +13,12 @@ namespace DynamicsReporting.Web.Controllers
         private readonly IApiService _apiService;
         private readonly ILogger<ReportController> _logger;
 
+
         public ReportController(IApiService apiService, ILogger<ReportController> logger)
         {
             _apiService = apiService;
             _logger = logger;
+    
         }
 
         [HttpGet]
@@ -41,14 +46,14 @@ namespace DynamicsReporting.Web.Controllers
                 var request = new ReqUserReport
                 {
                     UserID = userId ?? 0,
-                    GroupID = (int)groupId,  
+                    GroupID = (int)groupId,
                     currentPage = page,
                     pageSize = pageSize
                 };
 
                 var reports = await _apiService.GetReportByUserId(request);
 
-       
+
                 //_logger.LogInformation("Retrieved {Count} reports for User {UserId}, Group {GroupId}",
                 //    reports?.Data?.Data?.Count ?? 0, userId, groupId);
 
@@ -75,56 +80,75 @@ namespace DynamicsReporting.Web.Controllers
             }
         }
 
-        [HttpGet]
+        // แสดงหน้า View Report
         public async Task<IActionResult> ViewReport(int reportId)
         {
-            // ตรวจสอบ Session
-            var username = HttpContext.Session.GetString("Username");
-            if (string.IsNullOrEmpty(username))
+            var config = await _apiService.GetConfigReport(reportId);
+
+            if (config == null)
             {
-                return RedirectToAction("Login", "Authen");
+                config = new ResponseDataModel<ReportConfigModel>
+                {
+                    Data = new ReportConfigModel(),
+                    ErrorMessage = "No config data found",
+                    Status = ResponseStatus.Failed
+                };
             }
 
+            return View(config);
+        }
+
+        [HttpPost("execute")]
+        public async Task<IActionResult> ExecuteReport([FromBody] ReportRequest request)
+        {
             try
             {
-                // Logic สำหรับแสดง Report Details
-                // var reportDetails = await _apiService.GetReportDetailsAsync(reportId);
+             
+                var response = await _apiService.ExecuteReportPage(request);
 
-                ViewBag.ReportId = reportId;
-                return View(); // สร้าง View สำหรับแสดง report details
+                if (response != null && response.Data != null && response.Data.Any())
+                {
+                    return Json(new { success = true, data = response.Data });
+                }
+                else
+                {
+                    return Json(new { success = false, error = "No data found" });
+                }
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error viewing report {ReportId}", reportId);
-                TempData["ErrorMessage"] = "ไม่สามารถโหลดรายงานได้";
-                return RedirectToAction("Index");
+                return Json(new { success = false, error = ex.Message });
             }
         }
 
-        [HttpGet]
-        public async Task<IActionResult> GenerateReport(int reportId)
+
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> LoadReportData([FromBody] ReportRequest request)
         {
-            // ตรวจสอบ Session
-            var username = HttpContext.Session.GetString("Username");
-            if (string.IsNullOrEmpty(username))
+            var result = await _apiService.ExecuteReportPage(request);
+
+            if (result.Status == ResponseStatus.Success && result.Data != null)
             {
-                return RedirectToAction("Login", "Authen");
+                return Json(new
+                {
+                    // draw = request.Draw, // DataTables draw counter
+                    recordsTotal = result.Data.Count(),
+                    recordsFiltered = result.Data.Count(),
+                    data = result.Data
+                });
             }
 
-            try
+            return Json(new
             {
-                // Logic สำหรับ generate report (PDF, Excel, etc.)
-                // var reportData = await _apiService.GenerateReportAsync(reportId);
-
-                TempData["SuccessMessage"] = $"Report {reportId} has been generated successfully!";
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error generating report {ReportId}", reportId);
-                TempData["ErrorMessage"] = "ไม่สามารถสร้างรายงานได้";
-                return RedirectToAction("Index");
-            }
+                //  draw = request.Draw,
+                recordsTotal = 0,
+                recordsFiltered = 0,
+                data = new List<object>(),
+                error = result.ErrorMessage
+            });
         }
     }
 }

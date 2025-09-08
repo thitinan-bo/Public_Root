@@ -1,6 +1,7 @@
-﻿using System.Net;
+﻿using Microsoft.Extensions.Configuration;
+using System.Net;
 using System.Net.Sockets;
-using Microsoft.Extensions.Configuration;
+using System.Text.Json;
 
 namespace DynamicsReporting.ExternalService.Utility;
 
@@ -65,6 +66,79 @@ public class Utility
     {
         return Dns.GetHostEntry(Dns.GetHostName()).HostName;
     }
+
+
+
+    public object? ConvertJsonElementToClrObject(JsonElement element)
+    {
+        switch (element.ValueKind)
+        {
+            case JsonValueKind.String:
+                return element.GetString();
+
+            case JsonValueKind.Number:
+                if (element.TryGetInt32(out var intVal)) return intVal;
+                if (element.TryGetInt64(out var longVal)) return longVal;
+                if (element.TryGetDecimal(out var decVal)) return decVal;
+                if (element.TryGetDouble(out var dblVal)) return dblVal;
+                return element.ToString();
+
+            case JsonValueKind.True:
+            case JsonValueKind.False:
+                return element.GetBoolean();
+
+            case JsonValueKind.Null:
+            case JsonValueKind.Undefined:
+                return null;
+
+            case JsonValueKind.Array:
+                return element.EnumerateArray()
+                              .Select(ConvertJsonElementToClrObject)
+                              .ToList();
+
+            case JsonValueKind.Object:
+                return element.EnumerateObject()
+                              .ToDictionary(
+                                  prop => prop.Name,
+                                  prop => ConvertJsonElementToClrObject(prop.Value)
+                              );
+
+            default:
+                return element.ToString();
+        }
+    }
+
+
+    //public object ConvertJsonElement(JsonElement element)
+    //{
+    //    switch (element.ValueKind)
+    //    {
+    //        case JsonValueKind.String:
+    //            // ถ้าเป็น DateTime หรือ Guid แปลงด้วย
+    //            if (element.TryGetDateTime(out DateTime dt)) return dt;
+    //            if (element.TryGetGuid(out Guid guid)) return guid;
+    //            return element.GetString();
+
+    //        case JsonValueKind.Number:
+    //            if (element.TryGetInt32(out int i)) return i;
+    //            if (element.TryGetInt64(out long l)) return l;
+    //            if (element.TryGetDecimal(out decimal d)) return d;
+    //            if (element.TryGetDouble(out double dbl)) return dbl;
+    //            return element.GetRawText();
+
+    //        case JsonValueKind.True:
+    //        case JsonValueKind.False:
+    //            return element.GetBoolean();
+
+    //        case JsonValueKind.Null:
+    //        case JsonValueKind.Undefined:
+    //            return null;
+
+    //        default:
+    //            return element.GetRawText(); // กรณีเป็น Object/Array → return JSON string
+    //    }
+    //}
+
 
 
 }

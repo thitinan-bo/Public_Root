@@ -1,0 +1,15 @@
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\bin\Debug\net9.0\DynamicsReporting.ExternalService.deps.json
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\bin\Debug\net9.0\DynamicsReporting.ExternalService.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\bin\Debug\net9.0\DynamicsReporting.ExternalService.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\bin\Debug\net9.0\DynamicsReporting.Models.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\bin\Debug\net9.0\DynamicsReporting.Models.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.csproj.AssemblyReference.cache
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.GeneratedMSBuildEditorConfig.editorconfig
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.AssemblyInfoInputs.cache
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.AssemblyInfo.cs
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.csproj.CoreCompileInputs.cache
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\Dynamics.D9A4BEF4.Up2Date
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\refint\DynamicsReporting.ExternalService.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\DynamicsReporting.ExternalService.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.ExternalService\obj\Debug\net9.0\ref\DynamicsReporting.ExternalService.dll

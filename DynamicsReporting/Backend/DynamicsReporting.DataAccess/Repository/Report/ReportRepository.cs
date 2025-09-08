@@ -14,7 +14,7 @@ namespace DynamicsReporting.DataAccess.Repository.Report
 
         public ReportRepository(IConfiguration config)
         {
-            _db = new SqlConnection(config.GetConnectionString("APPConn"));
+            _db = new SqlConnection(config.GetConnectionString("APP"));
         }
 
         public async Task<PaginatedResult<ReportModel>> GetAllAsync(int currentPage, int pageSize)
@@ -66,29 +66,34 @@ namespace DynamicsReporting.DataAccess.Repository.Report
         }
 
 
-        ////public async Task<PaginatedResult<ReportModel>> GetReportByGroupIdAsync(ReqUserGroupReport groupReport)
+
+
+        /////////////////////////////////////////////////////////////
+        ///
+
+        //public (ReportProc Proc, IEnumerable<ReportParam> Params) GetReportConfig(int reportId)
         //{
-        //    var response = new PaginatedResult<ReportModel>();
-        //    List<ReportModel> allResults = new();
-
-        //    var sql = "EXEC usp_GetReportByGroupId @i_GroupID";
-        //    allResults = (await _db.QueryAsync<ReportModel>(sql, new { i_GroupID = groupReport.GroupID })).ToList();
-        //    var pagedData = allResults
-        //        .Skip((groupReport.currentPage - 1) * groupReport.pageSize)
-        //        .Take(groupReport.pageSize)
-        //        .ToList();
-
-        //    response.Data = pagedData;
-
-        //    response.Pagination = new Pagination
+        //    using (var conn = new SqlConnection(_db))
         //    {
-        //        CurrentPage = groupReport.currentPage,
-        //        PageSize = groupReport.pageSize,
-        //        TotalRecords = allResults.Count
-        //    };
+        //        var proc = conn.QueryFirstOrDefault<ReportProc>(
+        //            "SELECT * FROM dbo.tbl_ReportProc WHERE ReportID = @ReportId",
+        //            //GetReportProcByReportIDAsync
+        //            new { ReportId = reportId });
 
-        //    return response;
+        //        if (proc == null)
+        //            throw new Exception($"No ReportProc found for ReportId {reportId}");
+
+        //        var parameters = conn.Query<ReportParam>(
+        //            "SELECT * FROM dbo.tbl_ReportParams WHERE ReportProcID = @ProcId",
+        //            new { ProcId = proc.ReportProcID });
+
+        //        return (proc, parameters);
+        //    }
         //}
+
+
+
+
 
 
 

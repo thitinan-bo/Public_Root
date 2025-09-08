@@ -31,7 +31,7 @@ public class UserReportModel
     public int ReportID { get; set; }
     public int UserID { get; set; }
     public string ReportName { get; set; }
-    //public string ReportStatus { get; set; }
+
 
 }
 

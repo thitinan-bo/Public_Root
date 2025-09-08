@@ -1,0 +1,17 @@
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.DataAccess.deps.json
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.DataAccess.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.DataAccess.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.ExternalService.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.Models.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.Models.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\bin\Debug\net9.0\DynamicsReporting.ExternalService.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.csproj.AssemblyReference.cache
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.GeneratedMSBuildEditorConfig.editorconfig
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.AssemblyInfoInputs.cache
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.AssemblyInfo.cs
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.csproj.CoreCompileInputs.cache
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\Dynamics.BFB2E38A.Up2Date
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\refint\DynamicsReporting.DataAccess.dll
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\DynamicsReporting.DataAccess.pdb
+D:\viriyah.co.th\DynamicsReporting\Backend\DynamicsReporting.DataAccess\obj\Debug\net9.0\ref\DynamicsReporting.DataAccess.dll

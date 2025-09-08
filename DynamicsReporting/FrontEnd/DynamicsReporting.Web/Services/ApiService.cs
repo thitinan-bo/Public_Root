@@ -15,19 +15,15 @@ namespace DynamicsReporting.Web.Services
         private const string GroupReportByUserId = "/User/GroupReport";
         private const string ReportByUserId = "/User/Report";
 
+        private const string ConfigReport = "/User/ConfigReport";
+        private const string ExecuteReport = "/User/execute";
+
         public ApiService(HttpClient http, IConfiguration config)
         {
             _http = http;
             _config = config;
         }
-
-        private const string GroupReportByGroupId = "Report/groupId/{0}";
-
-        private const string AuthenGetBranchByBranchCode = "Authen/BranchByBranchCode/{branchCode}";
-
-        private const string GroupGetAll = "Group/GetAll";
-        private const string GroupGetById = "Group/{GroupId}";
-
+ 
 
 
 
@@ -62,7 +58,6 @@ namespace DynamicsReporting.Web.Services
             return responseData.Data;
 
         }
-
         public async Task<ResponseDataModel<AuthenResponseModel>> Authen(AuthenRequestModel model)
         {
             var responseData = new ResponseDataModel<AuthenResponseModel>();
@@ -99,11 +94,11 @@ namespace DynamicsReporting.Web.Services
             }
         }
 
-
         #endregion
 
-        #region Group Report
 
+
+        #region Group Report
         public async Task<ResponseDataModel<PaginatedResult<GroupReportUseModel>>> GetGroupReportByUserIdAsync(ReqUserGroup reqUserGroup)
         {
 
@@ -136,13 +131,11 @@ namespace DynamicsReporting.Web.Services
 
             return responseData;
         }
-
         #endregion
 
 
 
         #region Report
-
         public async Task<ResponseDataModel<PaginatedResult<ReportModel>>> GetReportByUserId(ReqUserReport userReport)
         {
             var responseData = new ResponseDataModel<PaginatedResult<ReportModel>>();
@@ -173,48 +166,89 @@ namespace DynamicsReporting.Web.Services
             }
 
             return responseData;
-             
+
         }
 
 
-        //
-
-        public async Task<ResponseDataModel<PaginatedResult<ReportModel>>> GetReportDetailsAsync(ReqUserReport userReport)
+        public async Task<ResponseDataModel<ReportConfigModel>> GetConfigReport(int reportId)
         {
-            var responseData = new ResponseDataModel<PaginatedResult<ReportModel>>();
+            var responseData = new ResponseDataModel<ReportConfigModel>();
 
             try
             {
-                var apiUrl = _config.GetValue<string>("ApiBaseUrl") + ReportByUserId;
-                var response = await _http.PostAsJsonAsync(apiUrl, userReport);
+                var apiUrl = _config.GetValue<string>("ApiBaseUrl") + ConfigReport;
+               
+                var response = await _http.PostAsJsonAsync(apiUrl, new ReportViewRequest { ReportId = reportId });
                 response.EnsureSuccessStatusCode();
-                var result = await response.Content.ReadFromJsonAsync<ResponseDataModel<PaginatedResult<ReportModel>>>();
+
+                var result = await response.Content.ReadFromJsonAsync<ResponseDataModel<ReportConfigModel>>();
 
                 if (result != null)
                 {
                     responseData.Data = result.Data;
                     responseData.ErrorCode = result.ErrorCode;
                     responseData.ErrorMessage = result.ErrorMessage;
+                    responseData.Status = result.Status;
+                    responseData.StatusCode = result.StatusCode;
                 }
                 else
                 {
                     responseData.ErrorCode = "1";
                     responseData.ErrorMessage = "No data found";
+                    responseData.Status = ResponseStatus.Failed;
                 }
             }
             catch (Exception ex)
             {
                 responseData.ErrorCode = "500";
                 responseData.ErrorMessage = ex.Message;
+                responseData.Status = ResponseStatus.Error;
             }
 
             return responseData;
+        }
 
+
+        public async Task<ResponseDataModel<IEnumerable<dynamic>>> ExecuteReportPage(ReportRequest reportRequest)
+        {
+       
+            var responseData = new ResponseDataModel<IEnumerable<dynamic>>();
+
+            try
+            {
+                var apiUrl = _config.GetValue<string>("ApiBaseUrl") + ExecuteReport;
+                var response = await _http.PostAsJsonAsync(apiUrl, reportRequest);
+                response.EnsureSuccessStatusCode();
+
+                var result = await response.Content.ReadFromJsonAsync<ResponseDataModel<IEnumerable<dynamic>>>();
+
+                if (result != null)
+                {
+                    responseData.Data = result.Data;
+                    responseData.ErrorCode = result.ErrorCode;
+                    responseData.ErrorMessage = result.ErrorMessage;
+                    responseData.Status = result.Status;
+                    responseData.StatusCode = result.StatusCode;
+                }
+                else
+                {
+                    responseData.ErrorCode = "1";
+                    responseData.ErrorMessage = "No data found";
+                    responseData.Status = ResponseStatus.Failed;
+                }
+            }
+            catch (Exception ex)
+            {
+                responseData.ErrorCode = "500";
+                responseData.ErrorMessage = ex.Message;
+                responseData.Status = ResponseStatus.Error;
+            }
+
+            return responseData;
         }
 
 
         #endregion
-
     }
 
 }

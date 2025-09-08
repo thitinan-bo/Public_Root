@@ -17,7 +17,6 @@ namespace DynamicsReporting.ExternalService.Service.Report.Interface
         Task<PaginatedResult<ReportModel>> GetReportByIdAsync(int groupId, int currentPage, int pageSize);
 
 
-        //   Task<PaginatedResult<ReportModel>> GetReportByGroupIdAsync(ReqUserGroupReport groupReport);
 
     }
 }

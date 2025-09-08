@@ -10,9 +10,9 @@ namespace DynamicsReporting.Models.Request
     public class ReqUserGroup
     {
         [Required(ErrorMessage = "UserID is required")]
-        public int UserID { get; set; }
-        public int currentPage { get; set; } = 1;
-        public int pageSize { get; set; } = 100;
+        public int UserId { get; set; }
+        public int CurrentPage { get; set; } = 1;
+        public int PageSize { get; set; } = 100;
 
     }
 }

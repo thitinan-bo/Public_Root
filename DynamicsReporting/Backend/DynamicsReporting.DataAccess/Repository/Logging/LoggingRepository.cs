@@ -22,28 +22,26 @@ namespace DynamicsReporting.DataAccess.Repository.Logging
 
         public async Task AddLogAsync(AddLogModel log)
         {
-     
             try
             {
-
-                var sql = "usp_AddLog ";
                 var parameters = new DynamicParameters();
                 parameters.Add("@i_HostName", log.HostName);
                 parameters.Add("@i_IPAddress", log.IPAddress);
                 parameters.Add("@i_FunctionName", log.FunctionName);
                 parameters.Add("@i_ErrorMessages", log.ErrorMessages);
 
-              await _db.ExecuteAsync(sql, parameters);
+                await _db.ExecuteAsync(
+                    "usp_AddLog",
+                    parameters,
+                    commandType: CommandType.StoredProcedure
+                );
             }
-            catch (Exception)
+            catch
             {
-
                 throw;
             }
- 
-
-
         }
+
     }
 
 }

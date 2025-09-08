@@ -46,9 +46,9 @@ public class UserController : ControllerBase
 
     // GET: api/user/by-username/{userName}
     [HttpGet("by-username/{userName}")]
-    public async Task<IActionResult> GetUserByUserName(string userName)
+    public async Task<IActionResult> GetUserByUserName(string userName, string branchCode)
     {
-        var user = await _userService.GetByUserNameAsync(userName);
+        var user = await _userService.GetByUserNameAsync(userName, branchCode);
         if (user == null) return NotFound();
 
         return Ok(user);
@@ -143,6 +143,123 @@ public class UserController : ControllerBase
             return StatusCode(500, responseData);
         }
     }
+
+    [HttpPost("ConfigReport")]
+    public async Task<IActionResult> GetReportConfigByReportIdAsync([FromBody] ReportViewRequest viewRequest)
+    {
+        var responseData = new ResponseDataModel<ReportConfigModel>();
+
+        try
+        {
+            var result = await _userService.GetReportConfigByReportIdAsync(viewRequest.ReportId);
+
+            if (result == null)
+            {
+                responseData.ErrorCode = "1";
+                responseData.ErrorMessage = "No data found";
+                responseData.Status = ResponseStatus.Failed;
+                responseData.ErrorType = "DataNotFound";
+                responseData.StatusCode = 404;
+                return NotFound(responseData);
+            }
+
+            if (result.ReportProcs == null || !result.ReportProcs.Any())
+            {
+                responseData.Data = result;
+                responseData.ErrorCode = "2";
+                responseData.ErrorMessage = "ReportProcs not found";
+                responseData.Status = ResponseStatus.Failed;
+                responseData.ErrorType = "MissingConfig";
+                responseData.StatusCode = 200; // หรือ 404 ก็ได้ถ้าอยากให้ชัดว่าไม่เจอ
+                return Ok(responseData);
+            }
+
+            if (result.ReportParams == null || !result.ReportParams.Any())
+            {
+                responseData.Data = result;
+                responseData.ErrorCode = "3";
+                responseData.ErrorMessage = "ReportParams not found";
+                responseData.Status = ResponseStatus.Failed;
+                responseData.ErrorType = "MissingConfig";
+                responseData.StatusCode = 200;
+                return Ok(responseData);
+            }
+
+
+            responseData.Data = result;
+            responseData.ErrorCode = "0";
+            responseData.ErrorMessage = "Success";
+            responseData.Status = ResponseStatus.Success;
+            responseData.ErrorType = ResponseStatus.Success;
+            responseData.StatusCode = 200;
+
+            return Ok(responseData);
+        }
+        catch (Exception ex)
+        {
+            string errMessage = $"ErrorCode 500 {ex.Message} Internal server error: {ex.Message}";
+            await LogErrorAsync("GetReportConfigByReportIdAsync", ex);
+
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = errMessage;
+            responseData.Status = ResponseStatus.Error;
+            responseData.ErrorType = ResponseErrorType.Exception;
+            responseData.StatusCode = 500;
+
+            return StatusCode(500, responseData);
+        }
+    }
+
+
+
+    [HttpPost("execute")]
+
+
+    public async Task<IActionResult> ExecuteReport([FromBody] ReportRequest request)
+    {
+        var responseData = new ResponseDataModel<IEnumerable<dynamic>>();
+
+        try
+        {
+            var data = await _userService.ExecuteReportAsync(request.ReportId, request.Parameters);
+
+            if (data == null || !data.Any())
+            {
+                responseData.Data = null;
+                responseData.ErrorCode = "1";
+                responseData.ErrorMessage = "No data found";
+                responseData.Status = ResponseStatus.Failed;
+                responseData.ErrorType = "DataNotFound";
+                responseData.StatusCode = 404;
+
+                return NotFound(responseData);
+            }
+
+            responseData.Data = data;
+            responseData.ErrorCode = "0";
+            responseData.ErrorMessage = "Success";
+            responseData.Status = ResponseStatus.Success;
+            responseData.ErrorType = ResponseStatus.Success;
+            responseData.StatusCode = 200;
+
+            return Ok(responseData);
+        }
+        catch (Exception ex)
+        {
+            string errMessage = $"ErrorCode 500 {ex.Message} Internal server error: {ex.Message}";
+            await LogErrorAsync("ExecuteReport", ex);
+
+            responseData.ErrorCode = "500";
+            responseData.ErrorMessage = errMessage;
+            responseData.Status = ResponseStatus.Error;
+            responseData.ErrorType = ResponseErrorType.Exception;
+            responseData.StatusCode = 500;
+
+            return StatusCode(500, responseData);
+        }
+    }
+
+
 
     private async Task LogErrorAsync(string functionName, Exception ex)
     {
