@@ -1,9 +1,0 @@
-D:\viriyah.co.th\DynamicsReporting\FrontEnd\DynamicsReportingApp\wwwroot\css\site.css
-D:\viriyah.co.th\DynamicsReporting\FrontEnd\DynamicsReportingApp\wwwroot\images\viriyah.ico
-D:\viriyah.co.th\DynamicsReporting\FrontEnd\DynamicsReportingApp\wwwroot\css\input.css
-wwwroot\css\input.css
-wwwroot\css\site.css
-wwwroot\images\loader1.gif
-wwwroot\images\logo.png
-wwwroot\images\viriyah.ico
-wwwroot\images\viriyah-logo.jpg

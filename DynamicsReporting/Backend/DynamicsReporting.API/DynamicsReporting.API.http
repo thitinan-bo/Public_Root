@@ -1,6 +1,0 @@
-@DynamicsReporting.API_HostAddress = http://localhost:5039
-
-GET {{DynamicsReporting.API_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
